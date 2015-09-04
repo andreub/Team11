@@ -16,6 +16,8 @@ quotes = [
     'A very small man can cast a very large shadow.'
 ]
 
+counters = [0 for _ in xrange(len(quotes))]
+
 data = {
     'quote': ''
 }
@@ -28,9 +30,10 @@ def api_quote(quoteid):
     else:
         return not_found('Invalid quote value.')
 
-
-    if 0 < quoteid <= len(quotes):
-        data['quote'] = quotes[quoteid-1]
+    if 0 <= quoteid <= len(quotes) - 1:
+        data['quote'] = quotes[quoteid]
+        counters[quoteid] += 1
+        data['counter'] = counters[quoteid]
         resp = jsonify(data)
         resp.status_code = 200
         return resp
@@ -40,7 +43,27 @@ def api_quote(quoteid):
 @app.route('/api/quote/random')
 def api_quote_random():
     from random import randint
-    data['quote'] = quotes[randint(0,len(quotes)-1)]
+    quote_idx = randint(0,len(quotes) -1)
+    counters[quote_idx] += 1
+    data['quote'] = quotes[quote_idx]
+    data['counter'] = counters[quote_idx]
+    resp = jsonify(data)
+    resp.status_code = 200
+
+    return resp
+
+@app.route('/api/quote/top')
+def api_quote_top():
+    max_idx = 0
+    max_value = 0
+    for idx, value in enumerate(counters):
+        print "idx: ", idx, " value: ", value
+        if value > max_value:
+            max_idx = idx
+            max_value = value
+
+    data['quote'] = quotes[max_idx]
+    data['counter'] = max_value
     resp = jsonify(data)
     resp.status_code = 200
 
@@ -72,3 +95,4 @@ def not_found(error='Error'):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
+
