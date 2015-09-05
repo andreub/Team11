@@ -3,3 +3,6 @@ unzip Prana-0.0.1.zip
 sudo mv Prana-0.0.1 /opt/Prana
 
 sudo pip install flask
+sudo pip install gtts
+sudo pip install requests
+
