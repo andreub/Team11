@@ -25,8 +25,8 @@ def roi_mp3(file):
 @app.route('/')
 def roi_speak():
    try:
-        r = requests.get("http://localhost:8078/proxy/?vip=team12&path=/api/quote/random")
-        #r = requests.get("http://ec2-52-19-172-174.eu-west-1.compute.amazonaws.com:5000/api/quote/random")
+        #r = requests.get("http://localhost:8078/proxy/?vip=team12&path=/api/quote/random")
+        r = requests.get("http://ec2-52-19-172-174.eu-west-1.compute.amazonaws.com:5000/api/quote/random")
         if debug: print r
         q = r.json()["quote"]
         if debug: print q
