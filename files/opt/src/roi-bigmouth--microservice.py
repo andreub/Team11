@@ -22,7 +22,7 @@ def roi_mp3(file):
 @app.route('/')
 def roi_speak():
    try:
-        r = requests.get("http://localhost:8078/proxy/?vio=team12&path=/api/quote/random")
+        r = requests.get("http://localhost:8078/proxy/?vip=team12&path=/api/quote/random")
         q = r.json()["quote"]
         #q = "Winter is coming"
         return render_template('index.html', quote=q, mp3_url=generate_mp3(q))
