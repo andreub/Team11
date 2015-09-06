@@ -22,16 +22,25 @@ def generate_mp3(quote):
 def roi_mp3(file):
    return open("/tmp/{}".format(file),"rb").read()     
 
+def get_gliphy_image(q):
+   try:
+        r = requests.get("http://api.giphy.com/v1/gifs/search?q={}&api_key=dc6zaTOxFJmzC&limit=1&offset=0".format(q.replace(" ", "+")))
+        result = r.json()["data"][0]["images"]["original"]["url"]
+
+        return result
+   except Exception as error:
+        return "http://media4.giphy.com/media/5xtDarvGTVmZCbDoDJK/giphy.gif"
+
 @app.route('/')
 def roi_speak():
    try:
-        #r = requests.get("http://localhost:8078/proxy/?vip=team12&path=/api/quote/random")
-        r = requests.get("http://ec2-52-19-172-174.eu-west-1.compute.amazonaws.com:5000/api/quote/random")
+	service = "team12"
+        r = requests.get("http://localhost:8078/proxy/?vip={}&path=/api/quote/random".format(service))
         if debug: print r
         q = r.json()["quote"]
         if debug: print q
         #q = "Winter is coming"
-        return render_template('index.html', quote=q, mp3_url=generate_mp3(q))
+        return render_template('index.html', quote=q, mp3_url=generate_mp3(q), gliphy_url=get_gliphy_image(q))
    except Exception as error:
         return not_found('Quote service error. {}'.format(traceback.format_exc()))
 
